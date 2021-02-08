@@ -5,8 +5,37 @@ icon: lock
 author:
   name: Tom Schwarz
   email: hi@tomschwarz.info
-  homepage: https://github.com/tomschwarz/grav-plugin-password-protection
-  keywords: grav, plugin, simple, password, protection, private
-  bugs: https://github.com/tomschwarz/grav-plugin-password-protection/issues
-  docs: https://github.com/tomschwarz/grav-plugin-password-protection/blob/master/README.md
-  license: MIT
+homepage: https://github.com/tomschwarz/grav-plugin-password-protection
+keywords: grav, plugin, simple, password, protection, private
+bugs: https://github.com/tomschwarz/grav-plugin-password-protection/issues
+docs: https://github.com/tomschwarz/grav-plugin-password-protection/blob/master/README.md
+license: MIT
+form:
+  validation: strict
+  fields:
+    enabled:
+      type: toggle
+      label: PLUGIN_ADMIN.PLUGIN_STATUS
+      highlight: 1
+      default: 0
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+    plugin_section:
+      type: section
+      title: Default Settings
+      underline: true
+    headline:
+      type: text
+      label: Headline
+      default: Password Protection
+    description:
+      type: text
+      label: Description
+      default: This page is protected by an password.
+    hint:
+      type: text
+      label: Hint
+      default: Maybe the default password or a random one?
