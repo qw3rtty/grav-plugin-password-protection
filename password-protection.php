@@ -62,14 +62,14 @@ class PasswordProtectionPlugin extends Plugin
 	 * Filter's the form data
 	 */
 	private function _filterFormData($form)
-    {
-        $defaults = [
-            'password'  => '',
-            'antispam'  => ''
-        ];
+	{
+		$defaults = [
+			'password'  => '',
+			'antispam'  => ''
+		];
 
-        return array_merge($defaults, $form);
-    }
+		return array_merge($defaults, $form);
+	}
 
 
 	/**
@@ -139,7 +139,7 @@ class PasswordProtectionPlugin extends Plugin
 	 * Add twig lookup path
 	 */
 	public function onTwigTemplatePaths()
-    {
+	{
 		$this->grav['twig']->twig_paths[] = __DIR__ . '/templates';
 	}
 
