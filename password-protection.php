@@ -15,6 +15,20 @@ use RocketTheme\Toolbox\Event\Event;
 class PasswordProtectionPlugin extends Plugin
 {
 	/**
+	 * Password from post data
+	 * @type string
+	 */
+	private $_password = "";
+
+
+	/**
+	 * Antispam from post data
+	 * @type sring
+	 */
+	private $_antispam = "";
+
+
+	/**
 	 * Get current page header 
 	 * @private
 	 */
@@ -24,6 +38,85 @@ class PasswordProtectionPlugin extends Plugin
 		return $page->header();	
 	}
 
+
+	/**
+	 * Get plugin config
+	 */
+	private function _getConfig()
+	{
+		// TODO: merge default config with page config!
+		return $this->grav['config']->get("plugins." . $this->name, null);
+	}
+
+
+	/**
+	 * Determines if the request is a POST request
+	 */
+	private function _isPostRequest()
+	{
+		return $_SERVER["REQUEST_METHOD"] === "POST";	
+	}
+
+	
+	/**
+	 * Filter's the form data
+	 */
+	private function _filterFormData($form)
+    {
+        $defaults = [
+            'password'  => '',
+            'antispam'  => ''
+        ];
+
+        return array_merge($defaults, $form);
+    }
+
+
+	/**
+	 * Validate's the form data
+	 */
+	private function _validateFormData()
+	{
+		$data = $this->_filterFormData($_POST);
+		$this->_password = $data["password"];
+		$this->_antispam = $data["antispam"];
+
+		return !(empty($this->_password) || !empty($this->_antispam));
+	}
+
+
+	/**
+	 * Validates the password
+	 * > check if it is the correct one
+	 */
+	private function _validatePassword()
+	{
+		// TODO: add sha1 sum check!
+		$header = $this->_getPageHeader();
+		return $this->_password === $header->pp_password;	
+	}
+
+
+	/**
+	 * Get password prompt
+	 */
+	private function _getPasswordPrompt()
+	{
+		if ($this->_isPostRequest())
+		{
+			if ($this->_validateFormData() && $this->_validatePassword()){
+				return;
+			}		
+		}
+
+		$prompt = new Page();
+		$prompt->init(new \SplFileInfo(__DIR__ . '/pages/password-protection.md'));
+		$prompt->header()->title = $this->grav["page"]->header()->title;
+			        
+		unset($this->grav['page']);
+		$this->grav['page'] = $prompt;
+	}
+	
 
 	/**
 	 * Return a list of subscribed events
@@ -36,10 +129,36 @@ class PasswordProtectionPlugin extends Plugin
 		return [
 			'onPageInitialized'    => ['onPageInitialized', 0],
 			'onPluginsInitialized' => ['onPluginsInitialized', 0],
+			'onTwigTemplatePaths'  => ['onTwigTemplatePaths', 0],
+			'onTwigSiteVariables'  => ['onTwigSiteVariables', 0],
 		];
 	}
 
-	
+
+	/**
+	 * Add twig lookup path
+	 */
+	public function onTwigTemplatePaths()
+    {
+		$this->grav['twig']->twig_paths[] = __DIR__ . '/templates';
+	}
+
+
+	/**
+	 * Add variables for twig template
+	 */
+	public function onTwigSiteVariables()
+	{
+		$twig = $this->grav['twig'];
+		$twig->twig_vars['pp_config'] = $this->_getConfig();
+
+		// TODO: Check if we need custom assets!
+		//$this->grav['assets']
+		//->add('plugin://password-protection/assets/css/password-protection.css')
+		//->add('plugin://password-protection/assets/js/password-protection.js');	
+	}
+
+
 	/**
 	 * Initialize page
 	 */
@@ -51,7 +170,7 @@ class PasswordProtectionPlugin extends Plugin
 
 		$header = $this->_getPageHeader();
 		if ($header->pp_protect) {
-			echo "PP ENABLED: " . $header->pp_protect;
+			$this->_getPasswordPrompt();	
 		}
 	}
 
@@ -63,7 +182,6 @@ class PasswordProtectionPlugin extends Plugin
 	{
 		// Set admin specific events
 		if ($this->isAdmin()) {
-			$this->active = false;
 			$events = [
 				'onBlueprintCreated' => ['onBlueprintCreated', 0],
 			];
