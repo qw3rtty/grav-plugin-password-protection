@@ -10,6 +10,10 @@ keywords: grav, plugin, simple, password, protection, private
 bugs: https://github.com/tomschwarz/grav-plugin-password-protection/issues
 docs: https://github.com/tomschwarz/grav-plugin-password-protection/blob/master/README.md
 license: MIT
+
+dependencies:
+    - { name: admin }
+
 form:
   validation: strict
   fields:
