@@ -7,12 +7,24 @@ use Grav\Common\Page\Pages;
 use Grav\Common\Data\Blueprints;
 use RocketTheme\Toolbox\Event\Event;
 
+
 /**
  * Class PasswordProtectionPlugin
  * @package Grav\Plugin
  */
 class PasswordProtectionPlugin extends Plugin
 {
+	/**
+	 * Get current page header 
+	 * @private
+	 */
+	private function _getPageHeader()
+	{
+		$page = $this->grav["page"];
+		return $page->header();	
+	}
+
+
 	/**
 	 * Return a list of subscribed events
 	 *
@@ -22,9 +34,25 @@ class PasswordProtectionPlugin extends Plugin
 	public static function getSubscribedEvents()
 	{
 		return [
+			'onPageInitialized'    => ['onPageInitialized', 0],
 			'onPluginsInitialized' => ['onPluginsInitialized', 0],
-			//'onPageInitialized'    => ['onPageInitialized', 0],
 		];
+	}
+
+	
+	/**
+	 * Initialize page
+	 */
+	public function onPageInitialized()
+	{
+		if ($this->isAdmin()) {
+			return;
+		}
+
+		$header = $this->_getPageHeader();
+		if ($header->pp_protect) {
+			echo "PP ENABLED: " . $header->pp_protect;
+		}
 	}
 
 
