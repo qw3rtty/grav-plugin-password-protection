@@ -39,10 +39,6 @@ form:
       type: textarea
       label: Description
       default: This page is protected by an password.
-    hint:
-      type: text
-      label: Hint
-      default: Maybe the default password or a random one?
     form_section:
       type: section
       title: Form Settings

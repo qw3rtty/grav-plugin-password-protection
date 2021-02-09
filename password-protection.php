@@ -15,6 +15,13 @@ use RocketTheme\Toolbox\Event\Event;
 class PasswordProtectionPlugin extends Plugin
 {
 	/**
+	 * Hold's the origin page config
+	 * @type array
+	 */
+	private $_config = [];
+
+
+	/**
 	 * Password from post data
 	 * @type string
 	 */
@@ -44,8 +51,18 @@ class PasswordProtectionPlugin extends Plugin
 	 */
 	private function _getConfig()
 	{
-		// TODO: merge default config with page config!
-		return $this->grav['config']->get("plugins." . $this->name, null);
+		$pluginConfig = $this->grav['config']->get("plugins." . $this->name, null);
+		$header = $this->_getPageHeader();
+		
+		if (isset($header->pp_headline)) {
+			$pluginConfig["headline"] = $header->pp_headline;
+		}
+		
+		if (isset($header->pp_description)) {
+			$pluginConfig["description"] = $header->pp_description;
+		}
+
+		return $pluginConfig;
 	}
 
 
@@ -116,7 +133,7 @@ class PasswordProtectionPlugin extends Plugin
 		unset($this->grav['page']);
 		$this->grav['page'] = $prompt;
 	}
-	
+
 
 	/**
 	 * Return a list of subscribed events
@@ -150,12 +167,7 @@ class PasswordProtectionPlugin extends Plugin
 	public function onTwigSiteVariables()
 	{
 		$twig = $this->grav['twig'];
-		$twig->twig_vars['pp_config'] = $this->_getConfig();
-
-		// TODO: Check if we need custom assets!
-		//$this->grav['assets']
-		//->add('plugin://password-protection/assets/css/password-protection.css')
-		//->add('plugin://password-protection/assets/js/password-protection.js');	
+		$twig->twig_vars['pp_config'] = $this->_config;
 	}
 
 
@@ -168,6 +180,7 @@ class PasswordProtectionPlugin extends Plugin
 			return;
 		}
 
+		$this->_config = $this->_getConfig();
 		$header = $this->_getPageHeader();
 		if ($header->pp_protect) {
 			$this->_getPasswordPrompt();	
