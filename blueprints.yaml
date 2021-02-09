@@ -36,7 +36,7 @@ form:
       label: Headline
       default: Password Protection
     description:
-      type: text
+      type: textarea
       label: Description
       default: This page is protected by an password.
     hint:

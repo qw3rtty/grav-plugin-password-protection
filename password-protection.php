@@ -91,9 +91,9 @@ class PasswordProtectionPlugin extends Plugin
 	 */
 	private function _validatePassword()
 	{
-		// TODO: add sha1 sum check!
 		$header = $this->_getPageHeader();
-		return $this->_password === $header->pp_password;	
+		$hash = hash("sha512", $this->_password);
+		return $hash === $header->pp_password_hash;	
 	}
 
 
