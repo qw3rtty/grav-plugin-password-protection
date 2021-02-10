@@ -58,9 +58,12 @@ Note that if you use the Admin Plugin, a file with your configuration named `pas
 
 ### Pages configuration
 
-On the pages itself you can `enable` it for this page and specify the `password` for this page.
+Once installed, on the pages itself you can `enable` it for current page and specify the `password` for it.
 
-Optional you can overwrite the default `Headline` and `Description` for this page.
+Optional you can overwrite the default `Headline` and `Description`.
+
+If you have the Admin Plugin installed you are able to configure it over the Page itself.
+There is a new tab `Password Protection` which contain all available options.
 
 Here is a list of all available options for an page:
 
