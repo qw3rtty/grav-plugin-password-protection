@@ -9,6 +9,8 @@ There is no default password!
 **NOTE:** The password have to be a `sha512` hash!  
 If you are not familiar to create one use [this](https://passwordsgenerator.net/sha512-hash-generator/) link to create one.
 
+IMAGE
+
 ## Installation
 
 Installing the **Password Protection** plugin can be done in one of three ways: The GPM (Grav Package Manager) installation method lets you quickly install the plugin with a simple terminal command, the manual method lets you do so via a zip file, and the admin method lets you do so via the Admin Plugin.
