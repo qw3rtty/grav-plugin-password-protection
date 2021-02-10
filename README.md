@@ -56,6 +56,31 @@ submit_label: Enter
 The options should be self-explain.  
 Note that if you use the Admin Plugin, a file with your configuration named `password-protection.yaml` will be saved in the `user/config/plugins/`-folder once the configuration is saved in the Admin.
 
+### Pages
+
+On the pages itself you can `enable` it for this page and specify the `password` for this page.
+
+Optional you can overwrite the default `Headline` and `Description` for this page.
+
+Here is a list of all available options for an page:
+
+```yaml
+# Enable or disable the password protection for this site
+# 1 = Enabled
+# 0 = Disabled
+pp_protect: '1'
+
+# Contains the SHA512 hash
+pp_password_hash: [HASH]
+
+# Overwrite's the default headline
+pp_headline: 'My custom headline.'
+
+# Overwrite's the default description
+# Multiline is possible
+pp_description: "My custom \r\nmultilne description."
+```
+
 ## Contributing
 
 If you want to contribute create an issue or an pull request.  
