@@ -111,7 +111,21 @@ class PasswordProtectionPlugin extends Plugin
 		$header = $this->_getPageHeader();
 		$hash = hash("sha512", $this->_password);
 		return $hash === $header->pp_password_hash;	
-	}
+    }
+
+
+    /**
+     * Create's the password prompt page
+     * @return Page
+     */
+    public function _getPasswordPage()
+    {
+        $promptPagePath = __DIR__ . "/pages/password-protection.md";
+        $prompt = new Page();
+        $prompt->init(new \SplFileInfo($promptPagePath));
+
+        return $prompt;
+    }
 
 
 	/**
@@ -126,12 +140,12 @@ class PasswordProtectionPlugin extends Plugin
 			}		
 		}
 
-		$prompt = new Page();
-		$prompt->init(new \SplFileInfo(__DIR__ . '/pages/password-protection.md'));
-		$prompt->header()->title = $this->grav["page"]->header()->title;
-			        
-		unset($this->grav['page']);
-		$this->grav['page'] = $prompt;
+		$passwordPage = $this->_getPasswordPage();
+        $page = $this->grav["page"];
+        
+        // Only overwrite the necessary fields
+        $page->content($passwordPage->content());
+        $page->template($passwordPage->template());
 	}
 
 
