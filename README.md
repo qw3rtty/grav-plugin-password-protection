@@ -47,6 +47,13 @@ submit_label: Enter
 The options should be self-explain.  
 Note that if you use the Admin Plugin, a file with your configuration named `password-protection.yaml` will be saved in the `user/config/plugins/`-folder once the configuration is saved in the Admin.
 
+## Usage
+After the installation you will find an extra tab on the pages. There you can `enable` the plugin for this specific page and set the unique password.  
+There is no default password!
+
+a**NOTE:** The password have to be a `sha512` hash!  
+If you are not familiar to create one use [this](https://passwordsgenerator.net/sha512-hash-generator/) link to create one.
+
 ## Contributing
 
 If you want to contribute create an issue or an pull request.  
