@@ -182,7 +182,7 @@ class PasswordProtectionPlugin extends Plugin
 
 		$this->_config = $this->_getConfig();
 		$header = $this->_getPageHeader();
-		if ($header->pp_protect) {
+		if (isset($header->pp_protect) && $header->pp_protect) {
 			$this->_getPasswordPrompt();	
 		}
 	}
