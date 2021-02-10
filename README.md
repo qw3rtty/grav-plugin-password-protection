@@ -56,7 +56,7 @@ submit_label: Enter
 The options should be self-explain.  
 Note that if you use the Admin Plugin, a file with your configuration named `password-protection.yaml` will be saved in the `user/config/plugins/`-folder once the configuration is saved in the Admin.
 
-### Pages
+### Pages configuration
 
 On the pages itself you can `enable` it for this page and specify the `password` for this page.
 
