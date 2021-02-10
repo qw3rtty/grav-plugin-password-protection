@@ -89,6 +89,10 @@ pp_description: "My custom \r\nmultilne description."
 If you want to contribute create an issue or an pull request.  
 I appreciate every single help!
 
+## TODO's
+- [ ] Add languages
+- [ ] Automatic generation of the SHA512 hash
+
 ## Other
 
 If you got some problems, improvements or changes let me know.  
