@@ -15,13 +15,6 @@ use RocketTheme\Toolbox\Event\Event;
 class PasswordProtectionPlugin extends Plugin
 {
 	/**
-	 * String length of SHA512 hash
-	 * @type integer
-	 */
-	private $_hashLength = 128;
-
-
-	/**
 	 * Hold's the origin page config
 	 * @type array
 	 */
@@ -212,10 +205,11 @@ class PasswordProtectionPlugin extends Plugin
 
 		}
 
-		if (isset($header->pp_password_hash) && 
-			strlen($header->pp_password_hash) !== $this->_hashLength) {
-			$hash = $this->_createHash($header->pp_password_hash);
+		if (isset($header->pp_password) && is_string($header->pp_password) 
+				&& !empty($header->pp_password)) { 
+			$hash = $this->_createHash($header->pp_password);
 			$header->set("pp_password_hash", $hash);
+			$header->undef("pp_password");
 		}
 	}
 
