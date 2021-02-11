@@ -15,6 +15,13 @@ use RocketTheme\Toolbox\Event\Event;
 class PasswordProtectionPlugin extends Plugin
 {
 	/**
+	 * String length of SHA512 hash
+	 * @type integer
+	 */
+	private $_hashLength = 128;
+
+
+	/**
 	 * Hold's the origin page config
 	 * @type array
 	 */
@@ -47,6 +54,23 @@ class PasswordProtectionPlugin extends Plugin
 
 
 	/**
+	 * Create an SHA512 hash of given password
+	 *
+	 * @return		String		Generated hash, empty string by error
+	 * @private
+	 */
+	private function _createHash($password)
+	{
+		$hash = "";
+		if (isset($password) && is_string($password) && !empty($password)) {
+			$hash = hash("sha512", $password);
+		}
+
+		return $hash;
+	}
+
+
+	/**
 	 * Get plugin config
 	 */
 	private function _getConfig()
@@ -54,11 +78,11 @@ class PasswordProtectionPlugin extends Plugin
 		$pluginConfig = $this->grav['config']->get("plugins." . $this->name, null);
 		$header = $this->_getPageHeader();
 		
-		if (isset($header->pp_headline)) {
+		if (isset($header->pp_headline) && !empty($header->pp_headline)) {
 			$pluginConfig["headline"] = $header->pp_headline;
 		}
 		
-		if (isset($header->pp_description)) {
+		if (isset($header->pp_description) && !empty($header->pp_headline)) {
 			$pluginConfig["description"] = $header->pp_description;
 		}
 
@@ -77,6 +101,7 @@ class PasswordProtectionPlugin extends Plugin
 	
 	/**
 	 * Filter's the form data
+	 * @return	array	Filtered form data array
 	 */
 	private function _filterFormData($form)
 	{
@@ -91,6 +116,7 @@ class PasswordProtectionPlugin extends Plugin
 
 	/**
 	 * Validate's the form data
+	 * @return	Boolean		true if form data is valid, false else
 	 */
 	private function _validateFormData()
 	{
@@ -109,7 +135,8 @@ class PasswordProtectionPlugin extends Plugin
 	private function _validatePassword()
 	{
 		$header = $this->_getPageHeader();
-		$hash = hash("sha512", $this->_password);
+		$hash = $this->_createHash($this->_password);
+
 		return $hash === $header->pp_password_hash;	
     }
 
@@ -158,11 +185,38 @@ class PasswordProtectionPlugin extends Plugin
 	public static function getSubscribedEvents()
 	{
 		return [
+			'onAdminSave'	       => ['onAdminSave', 0],
 			'onPageInitialized'    => ['onPageInitialized', 0],
 			'onPluginsInitialized' => ['onPluginsInitialized', 0],
 			'onTwigTemplatePaths'  => ['onTwigTemplatePaths', 0],
 			'onTwigSiteVariables'  => ['onTwigSiteVariables', 0],
 		];
+	}
+
+
+	/**
+	 * Change page object before saving.
+	 * > Add "feed.skip: true" if password protection is enabled
+	 * > Creates the SHA512 hash for given password
+	 *
+	 * @param	Event	$event
+	 */
+	public function onAdminSave(Event $event)
+	{
+		$page = $event["object"];
+		$header = $page->header();
+
+		$header->undef("feed.skip");
+		if (isset($header->pp_protect) && $header->pp_protect) {
+			$header->set("feed.skip", true);
+
+		}
+
+		if (isset($header->pp_password_hash) && 
+			strlen($header->pp_password_hash) !== $this->_hashLength) {
+			$hash = $this->_createHash($header->pp_password_hash);
+			$header->set("pp_password_hash", $hash);
+		}
 	}
 
 

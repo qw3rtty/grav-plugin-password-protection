@@ -6,8 +6,7 @@ Password protection is a simple plugin which allows you to specify a uniqe passw
 After the installation you will find an extra tab on the pages. There you can `enable` the plugin for this specific page and set the unique password.  
 There is no default password!
 
-**NOTE:** The password have to be a `sha512` hash!  
-If you are not familiar to create one use [this](https://passwordsgenerator.net/sha512-hash-generator/) link to create one.
+**NOTE:** The password is automatically converted to a `SHA512` hash.
 
 IMAGE
 
@@ -74,6 +73,7 @@ Here is a list of all available options for an page:
 pp_protect: '1'
 
 # Contains the SHA512 hash
+# If you use the Admin-Plugin the hash will be automatically generated on saving.
 pp_password_hash: [HASH]
 
 # Overwrite's the default headline
@@ -88,10 +88,6 @@ pp_description: "My custom \r\nmultilne description."
 
 If you want to contribute create an issue or an pull request.  
 I appreciate every single help!
-
-## TODO's
-- [ ] Automatic generation of the SHA512 hash
-- [ ] Toggle automatically `feed: skip` option on enable/disable password protection
 
 ## Other
 
