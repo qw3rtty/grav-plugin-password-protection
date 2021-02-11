@@ -73,7 +73,8 @@ Here is a list of all available options for an page:
 pp_protect: '1'
 
 # Contains the SHA512 hash
-# If you use the Admin-Plugin the hash will be automatically generated on saving.
+# - If you use the Admin-Plugin the hash will be automatically generated on saving.
+# - If you use it without the Admin-Plugin you have to generate the hash by yourself.
 pp_password_hash: [HASH]
 
 # Overwrite's the default headline
