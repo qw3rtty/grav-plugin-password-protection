@@ -90,7 +90,6 @@ If you want to contribute create an issue or an pull request.
 I appreciate every single help!
 
 ## TODO's
-- [ ] Add languages
 - [ ] Automatic generation of the SHA512 hash
 - [ ] Toggle automatically `feed: skip` option on enable/disable password protection
 
