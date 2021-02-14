@@ -8,7 +8,7 @@ There is no default password!
 
 **NOTE:** The password is automatically converted to a `SHA512` hash.
 
-IMAGE
+![Pages password protection tab](assets/pages-tab.jpg)
 
 ## Installation
 
