@@ -1,5 +1,5 @@
 name: Password Protection
-version: 0.1.0
+version: 0.1.1
 description: "Password protection is a simple plugin which allows you to specify a uniqe password for a page. Every page can have a different password."
 icon: lock
 author:
