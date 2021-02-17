@@ -39,6 +39,7 @@ form:
       type: textarea
       label: Description
       default: This page is protected by an password.
+      help: Markdown syntax is supported.
     form_section:
       type: section
       title: Form Settings
