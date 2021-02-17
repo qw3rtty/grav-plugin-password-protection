@@ -197,12 +197,14 @@ class PasswordProtectionPlugin extends Plugin
 	public function onAdminSave(Event $event)
 	{
 		$page = $event["object"];
-		$header = $page->header();
+		if (!method_exists($page, "header")) {
+			return;
+		}
 
+		$header = $page->header();
 		$header->undef("feed.skip");
 		if (isset($header->pp_protect) && $header->pp_protect) {
 			$header->set("feed.skip", true);
-
 		}
 
 		if (isset($header->pp_password) && is_string($header->pp_password) 
