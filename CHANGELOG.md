@@ -1,3 +1,9 @@
+# v0.1.2
+##  17/02/2021
+
+1. [](#enhancement)
+    * Add markdown support for "Description" field
+
 # v0.1.1
 ##  17/02/2021
 
