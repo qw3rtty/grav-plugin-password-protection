@@ -2,6 +2,7 @@
 namespace Grav\Plugin;
 
 use Grav\Common\Plugin;
+use Grav\Common\Page\Interfaces\PageInterface;
 use Grav\Common\Page\Page;
 use Grav\Common\Page\Pages;
 use Grav\Common\Data\Blueprints;
@@ -130,7 +131,7 @@ class PasswordProtectionPlugin extends Plugin
 		$header = $this->_getPageHeader();
 		$hash = $this->_createHash($this->_password);
 
-		return $hash === $header->pp_password_hash;	
+		return $hash === ($header->pp_password_hash ?? null);
     }
 
 
@@ -179,8 +180,8 @@ class PasswordProtectionPlugin extends Plugin
 	{
 		return [
 			'onAdminSave'	       => ['onAdminSave', 0],
+			'onBlueprintCreated'   => ['onBlueprintCreated', 0],
 			'onPageInitialized'    => ['onPageInitialized', 0],
-			'onPluginsInitialized' => ['onPluginsInitialized', 0],
 			'onTwigTemplatePaths'  => ['onTwigTemplatePaths', 0],
 			'onTwigSiteVariables'  => ['onTwigSiteVariables', 0],
 		];
@@ -197,22 +198,29 @@ class PasswordProtectionPlugin extends Plugin
 	public function onAdminSave(Event $event)
 	{
 		$page = $event["object"];
-		if (!method_exists($page, "header")) {
+		if (!$page instanceof PageInterface) {
 			return;
 		}
 
-		$header = $page->header();
-		$header->undef("feed.skip");
-		if (isset($header->pp_protect) && $header->pp_protect) {
-			$header->set("feed.skip", true);
+		// Depending on the page backend the header is either a stdClass or a
+		// Header object, so work on a plain array and write it back.
+		$header = json_decode(json_encode($page->header()), true) ?: [];
+
+		unset($header["feed"]["skip"]);
+		if (!empty($header["pp_protect"])) {
+			$header["feed"]["skip"] = true;
+		}
+		if (isset($header["feed"]) && $header["feed"] === []) {
+			unset($header["feed"]);
 		}
 
-		if (isset($header->pp_password) && is_string($header->pp_password) 
-				&& !empty($header->pp_password)) { 
-			$hash = $this->_createHash($header->pp_password);
-			$header->set("pp_password_hash", $hash);
-			$header->undef("pp_password");
+		if (isset($header["pp_password"]) && is_string($header["pp_password"])
+				&& !empty($header["pp_password"])) {
+			$header["pp_password_hash"] = $this->_createHash($header["pp_password"]);
 		}
+		unset($header["pp_password"]);
+
+		$page->header((object) $header);
 	}
 
 
@@ -253,24 +261,12 @@ class PasswordProtectionPlugin extends Plugin
 
 
 	/**
-	 * Initialize configuration
-	 */
-	public function onPluginsInitialized()
-	{
-		// Set admin specific events
-		if ($this->isAdmin()) {
-			$events = [
-				'onBlueprintCreated' => ['onBlueprintCreated', 0],
-			];
-
-			// Register events
-			$this->enable($events);
-		}
-	}
-
-
-	/**
 	 * Extend page blueprints with "Password Protection" configuration options.
+	 *
+	 * Subscribed unconditionally: with Grav 2 the admin (admin2) talks to the
+	 * API plugin, which registers its admin context only after all plugins
+	 * have been initialized, so an isAdmin() check in onPluginsInitialized
+	 * would never subscribe this handler.
 	 *
 	 * @param Event $event
 	 */

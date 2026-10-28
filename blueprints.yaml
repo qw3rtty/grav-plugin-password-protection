@@ -1,5 +1,7 @@
 name: Password Protection
-version: 0.1.2
+slug: password-protection
+type: plugin
+version: 0.2.0
 description: "Password protection is a simple plugin which allows you to specify a uniqe password for a page. Every page can have a different password."
 icon: lock
 author:
@@ -11,8 +13,11 @@ bugs: https://github.com/tomschwarz/grav-plugin-password-protection/issues
 docs: https://github.com/tomschwarz/grav-plugin-password-protection/blob/master/README.md
 license: MIT
 
+compatibility:
+  grav: ['1.7', '2.0']
+
 dependencies:
-    - { name: admin }
+    - { name: grav, version: '>=1.7.0' }
 
 form:
   validation: strict
