@@ -59,6 +59,8 @@ Note that if you use the Admin Plugin, a file with your configuration named `pas
 
 Once installed, on the pages itself you can `enable` it for current page and specify the `password` for it.
 
+Enable `Subpages` to protect all pages below this page with the same password, for example a whole folder of galleries.
+
 Optional you can overwrite the default `Headline` and `Description`.
 
 If you have the Admin Plugin installed you are able to configure it over the Page itself.
@@ -71,6 +73,12 @@ Here is a list of all available options for an page:
 # 1 = Enabled
 # 0 = Disabled
 pp_protect: '1'
+
+# Protect all subpages with the same password (optional)
+# A subpage with its own password protection uses its own password.
+# 1 = Enabled
+# 0 = Disabled
+pp_protect_children: '1'
 
 # Contains the SHA512 hash
 # - If you use the Admin-Plugin the hash will be automatically generated on saving.

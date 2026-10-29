@@ -1,7 +1,7 @@
 name: Password Protection
 slug: password-protection
 type: plugin
-version: 0.2.0
+version: 0.3.0
 description: "Password protection is a simple plugin which allows you to specify a uniqe password for a page. Every page can have a different password."
 icon: lock
 author:
