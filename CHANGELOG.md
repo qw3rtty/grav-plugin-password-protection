@@ -1,3 +1,9 @@
+# v0.3.0
+##  29/10/2026
+
+1. [](#new)
+    * Optionally protect all subpages with the password of a parent page (`pp_protect_children`)
+
 # v0.2.0
 ##  27/10/2026
 

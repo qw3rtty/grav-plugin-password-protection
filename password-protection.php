@@ -37,13 +37,46 @@ class PasswordProtectionPlugin extends Plugin
 
 
 	/**
-	 * Get current page header 
+	 * Page whose password protects the current page: the page itself, or
+	 * the nearest parent that protects its subpages
+	 * @type PageInterface|null
+	 */
+	private $_protectingPage = null;
+
+
+	/**
+	 * Get header of the protecting page (falls back to the current page)
 	 * @private
 	 */
 	private function _getPageHeader()
 	{
-		$page = $this->grav["page"];
-		return $page->header();	
+		$page = $this->_protectingPage ?? $this->grav["page"];
+		return $page->header();
+	}
+
+
+	/**
+	 * Find the page whose password protects the given page.
+	 * > The page itself if "pp_protect" is enabled on it
+	 * > Otherwise the nearest parent with "pp_protect" and "pp_protect_children" enabled
+	 *
+	 * @return	PageInterface|null	null if the page is not protected
+	 * @private
+	 */
+	private function _findProtectingPage(PageInterface $page)
+	{
+		if (!empty($page->header()->pp_protect)) {
+			return $page;
+		}
+
+		for ($parent = $page->parent(); $parent && !$parent->root(); $parent = $parent->parent()) {
+			$header = $parent->header();
+			if (!empty($header->pp_protect) && !empty($header->pp_protect_children)) {
+				return $parent;
+			}
+		}
+
+		return null;
 	}
 
 
@@ -252,10 +285,10 @@ class PasswordProtectionPlugin extends Plugin
 			return;
 		}
 
+		$this->_protectingPage = $this->_findProtectingPage($this->grav["page"]);
 		$this->_config = $this->_getConfig();
-		$header = $this->_getPageHeader();
-		if (isset($header->pp_protect) && $header->pp_protect) {
-			$this->_getPasswordPrompt();	
+		if ($this->_protectingPage) {
+			$this->_getPasswordPrompt();
 		}
 	}
 
